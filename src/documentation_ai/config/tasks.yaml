@@ -1,0 +1,28 @@
+documentar_task:
+  description: >
+    Analise a base de código e gere uma documentação técnica completa.
+    Certifique-se de identificar as funcionalidades, classes, métodos e fluxos principais.
+    Considere boas práticas de documentação para garantir clareza e fácil manutenção.
+    
+    Localização do código: {code_path} 
+    Localização da documentação: {documentation_path}
+
+  expected_output: >
+    Uma lista com 10 tópicos contendo as informações mais relevantes sobre o projeto e o código analisado,
+    incluindo descrições de funcionalidades, dependências, estruturas e pontos críticos.
+  agent: code_documentator
+  output_file: '{documentation_path}'
+
+analyse_code_task:
+  description: >
+    Revise o código, proponha melhorias de estrutura e formatação
+    seguindo princípios de Clean Code. Além disso, gere uma documentação explicativa
+    para cada alteração ou sugestão realizada.
+
+    Localização do código: {code_path} 
+    Localização do código refatorado: {code_refactored_path}
+  expected_output: >
+    Um relatório completo em Markdown, contendo os principais trechos de código analisados,
+    as melhorias aplicadas, o motivo de cada mudança e recomendações futuras. Sem utilizar blocos de '/**/'.
+  agent: code_analyst
+  output_file: '{code_refactored_path}'
