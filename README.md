@@ -37,8 +37,6 @@ $env:GOOGLE_APPLICATION_CREDENTIALS="C:\Users\Ruan\developer_projects\crewai\doc
 Para iniciar sua equipe de agentes AI e executar as tarefas definidas:
 
 ```bash
-Copiar
-Editar
 crewai run
 ```
 Isso inicializa a Documentation AI Crew, organiza os agentes e distribui as tarefas.
