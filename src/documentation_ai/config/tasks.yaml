@@ -1,28 +1,93 @@
-documentar_task:
+# documentar_task:
+#   description: >
+#     Analise a base de código atual e a documentação técnica existente. Atualize a documentação de nível L3, 
+#     garantindo que ela reflita fielmente a estrutura e funcionalidades reais do projeto. 
+#     Adicione descrições de novas funcionalidades, classes, métodos e fluxos implementados no código.
+#     Remova ou ajuste tópicos referentes a funcionalidades ou trechos de código descontinuados.
+
+#     Caso não exista uma documentação técnica existente, utilize o template de documentação apenas como estrutura 
+#     de referência, adaptando-o ao conteúdo real identificado no projeto. 
+#     Atenção: a documentação deve conter apenas informações efetivamente presentes na base de código analisada.
+
+#     Localização do código: {code_path}
+#     Localização da documentação técnica: {documentation_path}
+#     Localização de um template de documentação técnica: {template_L3}
+
+#   expected_output: >
+#     Um arquivo Markdown contendo:
+#     - Descrição geral atualizada do projeto (se aplicável).
+#     - Relação de funcionalidades implementadas no código.
+#     - Classes e métodos ativos, com descrição e finalidade.
+#     - Fluxos técnicos atuais e seus processos.
+#     - Dependências e bibliotecas efetivamente utilizadas.
+#     - Pontos críticos detectados e recomendações técnicas.
+#     - Remoção de tópicos sobre funcionalidades obsoletas.
+#     - Inclusão de novas implementações detectadas no código.
+
+#   agent: code_documentator
+#   output_file: '{documentation_path}'
+
+# analyse_code_task:
+#   description: >
+#     Revise o código, proponha melhorias de estrutura e formatação
+#     seguindo princípios de Clean Code. Além disso, gere uma documentação explicativa
+#     para cada alteração ou sugestão realizada.
+
+#     Localização do código: {code_path} 
+#     Localização do código refatorado: {code_refactored_path}
+#   expected_output: >
+#     Um relatório completo em Markdown, contendo os principais trechos de código analisados,
+#     as melhorias aplicadas, o motivo de cada mudança e recomendações futuras. Sem utilizar blocos de '/**/'.
+#   agent: code_analyst
+#   output_file: '{code_refactored_path}'
+
+documentar_negocio_task:
   description: >
-    Analise a base de código e gere uma documentação técnica completa.
-    Certifique-se de identificar as funcionalidades, classes, métodos e fluxos principais.
-    Considere boas práticas de documentação para garantir clareza e fácil manutenção.
-    
-    Localização do código: {code_path} 
-    Localização da documentação: {documentation_path}
+    Analise a base de código e a documentação de negócio existente. Atualize a documentação de nível L1,
+    garantindo que ela descreva corretamente os fluxos de negócio e operações disponíveis sob a ótica de 
+    usuários ou sistemas externos interagindo com o projeto.
+
+    Para cada funcionalidade identificada:
+    - Descreva a ação que o sistema permite do ponto de vista do usuário/sistema externo.
+    - Detalhe como realizar essa ação, informando os parâmetros necessários e as regras de negócio aplicáveis.
+    - Especifique o endpoint ou mecanismo utilizado para executar a ação.
+    - Inclua o fluxo operacional, requisitos e comportamentos esperados.
+
+    **Caso a resposta da ação contenha identificadores ou informações adicionais relevantes 
+    (ex: `metric_id`, `tracking_code`, `token`), documente seu propósito, a forma como podem 
+    ser utilizados e seu valor para o usuário ou para futuras funcionalidades, mesmo que não haja 
+    um endpoint de consulta implementado no momento.**
+
+    Caso não exista uma documentação de negócio oficial, utilize o template de documentação fornecido 
+    como referência estrutural, preenchendo os tópicos aplicáveis de acordo com a análise do projeto.
+
+    Se existir documentação oficial:
+    - Atualize com novas funcionalidades, ações, regras e fluxos detectados.
+    - Ajuste ou remova informações desatualizadas.
+    - Inclua melhorias na estrutura de descrição, seguindo o modelo do template. Somente se precisar.
+    - **Revise a seção de "⚠️ Pontos de Risco e Sugestões", atualizando ou removendo riscos que já foram mitigados 
+      pelas funcionalidades implementadas (como a consulta de métricas via `metric_id`), e mantendo apenas os pontos 
+      que ainda se aplicam.**
+
+    Localização do código: {code_path}
+    Localização da documentação de negócio: {business_documentation_path}
+    Localização de um template de documentação de negócio: {template_L1}
 
   expected_output: >
-    Uma lista com 10 tópicos contendo as informações mais relevantes sobre o projeto e o código analisado,
-    incluindo descrições de funcionalidades, dependências, estruturas e pontos críticos.
-  agent: code_documentator
-  output_file: '{documentation_path}'
+    Um arquivo Markdown contendo:
+    - Descrição geral do projeto.
+    - Objetivos de negócio principais implementados.
+    - Funcionalidades disponíveis descritas pelo que o usuário pode fazer.
+    - Para cada funcionalidade: o que permite, como usar, requisitos/parâmetros, o endpoint utilizado e 
+      qualquer identificador ou dado relevante retornado.
+    - Fluxos de operação sob a ótica do usuário ou sistema externo.
+    - Regras de negócio e restrições atualizadas.
+    - Entradas e saídas esperadas do sistema.
+    - Integrações com sistemas externos (se houver).
+    - Principais pontos de risco e sugestões de melhoria sob a ótica de negócio, revisadas conforme 
+      funcionalidades atualmente disponíveis.
 
-analyse_code_task:
-  description: >
-    Revise o código, proponha melhorias de estrutura e formatação
-    seguindo princípios de Clean Code. Além disso, gere uma documentação explicativa
-    para cada alteração ou sugestão realizada.
+  agent: business_documentator
+  output_file: '{business_documentation_path}'
 
-    Localização do código: {code_path} 
-    Localização do código refatorado: {code_refactored_path}
-  expected_output: >
-    Um relatório completo em Markdown, contendo os principais trechos de código analisados,
-    as melhorias aplicadas, o motivo de cada mudança e recomendações futuras. Sem utilizar blocos de '/**/'.
-  agent: code_analyst
-  output_file: '{code_refactored_path}'
+

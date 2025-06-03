@@ -18,9 +18,12 @@ def run():
     """
     root_path = r'C:\Users\Ruan\developer_projects\crewai\documentation_ai'
     inputs = {
-        'code_path': os.path.join(root_path, 'src', 'code_base', 'LogService.js'),
-        'code_refactored_path': os.path.join(root_path, 'src', 'code_base', 'SuggestionImprovement.md'),
-        'documentation_path': os.path.join(root_path, 'src', 'code_base', 'Documentation.md'),
+        'code_path': os.path.join(root_path, 'src', 'resources', 'TesteStress'),
+        # 'code_refactored_path': os.path.join(root_path, 'src', 'resources', 'SuggestionImprovement.md'),
+        # 'documentation_path': os.path.join(root_path, 'src', 'resources', 'DocumentationSystem.md'),
+        'business_documentation_path': os.path.join(root_path, 'src', 'resources', 'Documentation.md'),
+        'template_L1': os.path.join(root_path, 'src', 'resources', 'templates', 'documentation_L1.md'),
+        # 'template_L3': os.path.join(root_path, 'src', 'resources', 'templates', 'documentation_L3.md'),
     }
     
     try:

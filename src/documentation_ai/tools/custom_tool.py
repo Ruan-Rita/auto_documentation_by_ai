@@ -1,9 +1,12 @@
+import os
+import httpx
+import subprocess
 from crewai.tools import tool
 
-@tool("Read JavaScript File")
-def read_javascript_file(file_path: str) -> str:
-    """Lê o conteúdo de um arquivo JavaScript (.js) e retorna como string. 
-    Use essa ferramenta quando precisar analisar ou documentar o código de um arquivo JavaScript."""
+@tool("Read File")
+def read_file(file_path: str) -> str:
+    """Lê o conteúdo de um arquivo de texto (como .js, .ts, .py, .json, .html, etc) e retorna como string.
+    Use essa ferramenta quando precisar analisar ou documentar o código ou conteúdo de qualquer arquivo."""
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
             content = file.read()
@@ -12,3 +15,59 @@ def read_javascript_file(file_path: str) -> str:
         return f"Arquivo não encontrado: {file_path}"
     except Exception as e:
         return f"Ocorreu um erro ao ler o arquivo: {str(e)}"
+    
+@tool("List Project Files")
+def list_project_files(directory_path: str) -> str:
+    """Lista todos os arquivos e diretórios dentro de um diretório,
+    ignorando pastas como node_modules, .git e dist.
+    Use essa ferramenta para explorar a estrutura de um projeto."""
+    try:
+        ignored_dirs = {'node_modules', '.git', 'dist', '__pycache__'}
+
+        files = []
+        for root, dirs, filenames in os.walk(directory_path):
+            # Remove as pastas indesejadas da lista de diretórios a serem percorridos
+            dirs[:] = [d for d in dirs if d not in ignored_dirs]
+            for name in filenames:
+                files.append(os.path.join(root, name))
+                
+        return "\n".join(files) if files else "Nenhum arquivo encontrado."
+    except Exception as e:
+        return f"Ocorreu um erro ao listar os arquivos: {str(e)}"
+    
+@tool("Async HTTP Request and Response Reader")
+async def fetch_and_read_response(method: str, url: str, data: dict = None, headers: dict = None) -> str:
+    """Faz uma requisição HTTP assíncrona e retorna o conteúdo da resposta para o agente analisar."""
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.request(method=method.upper(), url=url, json=data, headers=headers)
+
+            # Se for JSON tenta formatar
+            try:
+                content = response.json()
+                return f"Status: {response.status_code}\n\nResponse JSON:\n{content}"
+            except Exception:
+                return f"Status: {response.status_code}\n\nResponse Text:\n{response.text}"
+
+    except Exception as e:
+        return f"Ocorreu um erro ao fazer a requisição: {str(e)}"
+    
+@tool("Run NPM Command")
+def run_npm_command(command: str) -> str:
+    """Executa um comando npm no terminal e retorna a saída. Use apenas para comandos npm seguros."""
+    try:
+        # Só permite comandos npm para segurança
+        if not command.startswith("npm "):
+            return "Comando não permitido. Apenas comandos npm são aceitos."
+
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        output = result.stdout
+        error = result.stderr
+
+        if result.returncode == 0:
+            return f"Comando executado com sucesso:\n\n{output}"
+        else:
+            return f"Ocorreu um erro ao executar o comando:\n\n{error}"
+
+    except Exception as e:
+        return f"Ocorreu um erro inesperado: {str(e)}"
