@@ -3,7 +3,7 @@ import sys
 import warnings
 import os
 
-from documentation_ai.crew import App
+from resources.crew import App
 
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
@@ -18,12 +18,12 @@ def run():
     """
     root_path = r'C:\Users\Ruan\developer_projects\crewai\documentation_ai'
     inputs = {
-        'code_path': os.path.join(root_path, 'src', 'resources', 'TesteStress'),
-        # 'code_refactored_path': os.path.join(root_path, 'src', 'resources', 'SuggestionImprovement.md'),
-        # 'documentation_path': os.path.join(root_path, 'src', 'resources', 'DocumentationSystem.md'),
-        'business_documentation_path': os.path.join(root_path, 'src', 'resources', 'Documentation.md'),
-        'template_L1': os.path.join(root_path, 'src', 'resources', 'templates', 'documentation_L1.md'),
-        # 'template_L3': os.path.join(root_path, 'src', 'resources', 'templates', 'documentation_L3.md'),
+        'code_path': os.path.join(root_path, 'src', 'public', 'TesteStress'),
+        # 'code_refactored_path': os.path.join(root_path, 'src', 'public', 'SuggestionImprovement.md'),
+        # 'documentation_path': os.path.join(root_path, 'src', 'public', 'DocumentationSystem.md'),
+        'business_documentation_path': os.path.join(root_path, 'src', 'public', 'Documentation.md'),
+        'template_L1': os.path.join(root_path, 'src', 'public', 'templates', 'documentation_L1.md'),
+        # 'template_L3': os.path.join(root_path, 'src', 'public', 'templates', 'documentation_L3.md'),
     }
     
     try:
