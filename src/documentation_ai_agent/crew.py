@@ -1,8 +1,8 @@
 from crewai import LLM, Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
-from resources.tools.custom_tool import list_project_files
-from resources.tools.custom_tool import read_file
+from documentation_ai_agent.tools.custom_tool import list_project_files
+from documentation_ai_agent.tools.custom_tool import read_file
 from typing import List
 from dotenv import load_dotenv
 import os

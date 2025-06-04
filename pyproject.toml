@@ -1,5 +1,5 @@
 [project]
-name = "resources"
+name = "documentation_ai_agent"
 version = "0.1.0"
 description = "documentation_ai using crewAI"
 authors = [{ name = "Your Name", email = "you@example.com" }]
@@ -12,11 +12,11 @@ dependencies = [
 ]
 
 [project.scripts]
-documentation_ai = "resources.main:run"
-run_crew = "resources.main:run"
-train = "resources.main:train"
-replay = "resources.main:replay"
-test = "resources.main:test"
+documentation_ai = "documentation_ai_agent.main:run"
+run_crew = "documentation_ai_agent.main:run"
+train = "documentation_ai_agent.main:train"
+replay = "documentation_ai_agent.main:replay"
+test = "documentation_ai_agent.main:test"
 
 [build-system]
 requires = ["hatchling"]
