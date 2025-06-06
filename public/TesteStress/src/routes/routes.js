@@ -5,9 +5,6 @@ var fs = require('fs');
 var path = require('path');
 const crypto = require('crypto');
 
-// Armazena métricas em memória
-const metrics = [];
-
 exports.routes = (app) => {
     // Test rota sem file
     app.get('/send-request', tryCatch(async (req, res, next) => {
@@ -21,31 +18,11 @@ exports.routes = (app) => {
             }
         }
 
-        let success = 0;
-        let errors = 0;
-
         for (let i = 0; i < quantityRequest; i++) {
-            try {
-                await axios.get(endPoint, header);
-                success++;
-            } catch (e) {
-                errors++;
-            }
+            await axios.get(endPoint, header);
         }
-
-        const id = generateId();
-        metrics.push({
-            id,
-            type: 'send-request',
-            quantity: quantityRequest,
-            success,
-            errors,
-            timestamp: new Date()
-        });
-
         res.status(200).send({
             message: 'Dispatched ' + quantityRequest + ' requests',
-            metric_id: id
         });
     }));
 
@@ -65,58 +42,14 @@ exports.routes = (app) => {
             }
         }
 
-        let success = 0;
-        let errors = 0;
-        let message = [];
-
         for (let i = 0; i < quantityRequest; i++) {
-            const result = await postInvoiceAxios(endPoint, fileBuffer, header);
-            const msg404 = 'Não encontrou nenhuma mensagem para essa requisição';
-
-            if (result !== 'error') {
-                success++;
-                message.push(result.data ? result.data.message : msg404);
-            } else {
-                errors++;
-                message.push('error');
-            }
-
-            new LogService().logg({ data: result.data ? result.data.message : msg404 });
+            await postInvoiceAxios(endPoint, fileBuffer, header);
         }
-
-        const id = generateId();
-        metrics.push({
-            id,
-            type: 'send-file',
-            quantity: quantityRequest,
-            success,
-            errors,
-            timestamp: new Date()
-        });
 
         return response.status(200).send({
             message: 'Dispatched ' + quantityRequest + ' upload files',
-            outro: message,
-            metric_id: id
         });
     }));
-
-    // Rota para consultar métricas
-    app.get('/metrics/:id', (req, res) => {
-        const { id } = req.params;
-        const metric = metrics.find(m => m.id === id);
-
-        if (!metric) {
-            return res.status(404).send({ message: 'Metric not found' });
-        }
-
-        return res.status(200).send(metric);
-    });
-}
-
-// Função auxiliar pra gerar ID único
-function generateId() {
-    return crypto.randomBytes(8).toString('hex');
 }
 
 async function postInvoiceAxios(endPoint, fileBuffer, header) {

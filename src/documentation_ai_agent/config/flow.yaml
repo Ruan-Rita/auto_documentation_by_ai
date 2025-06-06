@@ -1,0 +1,21 @@
+name: business_documentation_update_flow
+description: >
+  Este flow reage a um webhook de Pull Request, analisa o diff de código, classifica as alterações 
+  e atualiza a documentação de negócio de acordo com os impactos detectados.
+
+steps:
+  - name: listen_pull_request
+    task: pr_webhook_listener
+    on_event: pull_request_opened
+
+  - name: analyze_code_changes
+    task: process_code_changes_task
+    depends_on: listen_pull_request
+    input_file: '{diff_file}'
+    output_file: '{diff_analysis_report}'
+
+  - name: update_business_documentation
+    task: documentar_negocio_task
+    depends_on: analyze_code_changes
+    input_file: '{diff_analysis_report}'
+    output_file: '{business_documentation_path}'

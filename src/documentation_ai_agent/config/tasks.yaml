@@ -90,4 +90,52 @@ documentar_negocio_task:
   agent: business_documentator
   output_file: '{business_documentation_path}'
 
+process_code_changes_task:
+  description: >
+    Receber um diff de código originado por um evento de Pull Request e analisar as alterações realizadas.
+    Identificar blocos de código adicionados e removidos, classificando as alterações por tipo e contexto de negócio.
 
+    Para cada alteração:
+    - Identificar o arquivo e a linha impactada.
+    - Categorizar se é uma adição, remoção ou modificação.
+    - Determinar o tipo de alteração (ex: criação de endpoint, modificação de regra de negócio, adição de integração, ajuste em log ou validação).
+    - Avaliar se há impacto em funcionalidades já documentadas.
+    - Detectar possíveis relações de dependência ou quebra de fluxo.
+
+    Ao final da análise:
+    - Gerar um relatório estruturado contendo as alterações detectadas.
+    - Encaminhar esse relatório para o agente `business_documentator` para que ele atualize a documentação de negócio correspondente.
+
+    Ignore informações de mensagens de commit, baseando sua análise unicamente no conteúdo do diff.
+
+  expected_output: >
+    Um arquivo JSON ou Markdown contendo:
+    - Lista de arquivos modificados.
+    - Blocos de código adicionados e removidos por arquivo.
+    - Classificação de cada alteração por tipo e contexto.
+    - Sugestão de quais documentações ou fluxos de negócio precisam ser atualizados.
+    - Potenciais riscos ou dependências associadas às alterações.
+    - Indicação de quais alterações podem ser ignoradas para fins de documentação de negócio.
+
+  agent: code_diff_analyzer
+  input_file: '{diff_file}'
+  output_file: '{diff_analysis_report}'
+
+pr_webhook_handler_task:
+  description: >
+    Recebe os dados da notificação via webhook sobre novas pull requests criadas no repositório.
+    A partir dos dados recebidos:
+    - Gere o diff entre a branch de origem e a branch de destino.
+    - Salve o diff em um arquivo temporário.
+    - Acione a task `process_code_changes_task` passando esse diff como entrada.
+    - Em seguida, encaminhe o relatório gerado para a `business_documentator_task` para atualização da documentação.
+
+    A análise deve ser baseada no conteúdo das alterações de código, mesmo se a mensagem de commit estiver inadequada.
+
+  expected_output: >
+    Execução sequencial:
+    1. Geração do diff da PR.
+    2. Execução da task `process_code_changes_task`.
+    3. Execução da task `business_documentator_task` com base no relatório.
+
+  agent: pr_webhook_listener
